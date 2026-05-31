@@ -1,0 +1,52 @@
+PROYEK MATA KULIAH STRUKTUR DATA DAN ALGORITMA
+Implementasi Library Python Dequeue  pada Sistem Pemrosesan Pesanan Vending Machine Menggunakan Logika FIFO
+
+Oleh:
+1. Faiza Alya					(25031554050)
+2. Hany Angel Trinity Siahaan	(24031554140)
+
+Dosen Pengampu:
+1. Dr. Heri Purnawan, M.Si.			(0938771672130392)
+2. Yuni Rosita Dewi, S.Si., M.Si.	(2960773674230240)
+
+PROGRAM STUDI SAINS DATA
+FAKULTAS MATEMATIKA DAN ILMU PENGETAHUAN ALAM
+UNIVERSITAS NEGERI SURABAYA
+MEI 2026
+
+Fokus utama proyek ini adalah mengaplikasikan materi perkuliahan Struktur Data dan Algortima dalam memecahkan masalah logika pada proses keranjang belanja vending machine.
+1. ANALISIS IMPLEMENTASI STRUKTUR DATA
+A. Dataset Stock Barang
+Pemilihan Hash Map sebagai dataset barang, sehingga tidak perlu melakukan pencarian data satu per satu. Program dapat langsung melompat ke lokasi memori data objek berdasarkan kuncinya (Key Lookup) dengan Kompleksitas Waktu O(1) (Constant Time).
+
+B. Keranjang Belanja (List)
+Pemilihan tipe data list sebagai tempat tampungan daftar barang yang dipilih untuk sementara dan ukuran kapasitas penampungannya dapat meluas atau menyusut secara dinamis sepanjang program berjalan.
+
+2. ANALISIS IMPLEMENTASI ALGORITMA
+A. Algoritma Deletion dan Shifting pada Array (Fitur Hapus Item Terpilih)
+Ketika fungsi pembatalan item remove_selected_item() dipanggil, terjadi logika berikut ini:
+1) Direct Access via Index: Layar GUI Tkinter menangkap nomor indeks item yang disorot oleh pengguna di keranjang melalui perintah selected_index[0].
+2) Deletion (.pop): Program langsung mengeksekusi penghapusan elemen pada posisi spesifik tersebut melalui perintah removed_item = self.cart.pop(idx).
+3) Element Shifting: Di balik memori, elemen-elemen array yang berada di belakang indeks terhapus akan maju satu langkah ke depan secara otomatis demi menjaga kerapatan indeks array. Kompleksitas operasi ini secara teoretis adalah O(n).
+4) Instant Inventory Restock: Nama barang hasil .pop() langsung digunakan sebagai Key untuk meningkatkan sisa kuantitas di toko (self.stock[removed_item]["count"] += 1) secara instan dengan durasi O(1).
+B. Algoritma Antrean FIFO   First In First Out
+Mekanisme algoritma pada fungsi animate_fifo_release() adalah sebagai berikut:
+1) Kondisi Berulang (Base Case): Selama keranjang belanja (self.cart) tidak kosong, algoritma akan terus berjalan.
+2) Dequeue dari Kepala Antrean: Elemen yang berada di posisi paling depan atau indeks ke-0 dikeluarkan terlebih dahulu menggunakan fungsi current_item = self.cart.pop(0). Ini adalah inti dari prinsip FIFO, di mana item yang pertama dimasukkan pembeli akan menjadi item pertama yang keluar.
+3) Asynchronous Recursion: Program memperbarui tampilan visual dispenser dan riwayat pengeluaran. Setelah itu, program memanggil dirinya sendiri kembali secara rekursif menggunakan fungsi pewaktu self.root.after(1500, self.animate_fifo_release). Jeda 1,5 detik (1500 ms) menyimulasikan proses mekanis jatuhnya barang di dunia nyata.
+4) Pergeseran Antrean: Ketika indeks ke-0 dikeluarkan, item di belakangnya secara otomatis maju menempati posisi indeks ke-0 yang baru, siap untuk diproses pada iterasi rekursif berikutnya.
+
+3. STRUKTUR DAN FUNGSI KODE PROGRAM (FUNGSI PER FUNGSI)
+Berikut adalah fungsi-fungsi utama di dalam file Vending_Machine.py:
+1) __init__(self, root): Konstruktor utama untuk membangun jendela aplikasi, menginisialisasi basis data awal (self.stock), array keranjang belanja, serta tata letak pembagian wilayah layar (Left Frame & Right Frame).
+2) create_widgets(self): Membangun seluruh komponen antarmuka GUI, mulai dari tombol-tombol produk di etalase, label info status dispenser, kotak list riwayat barang keluar, hingga tombol pembayaran.
+3) update_stock_display(self): Melakukan pemindaian (looping) terhadap isi Hash Map stok untuk merender teks jumlah sisa barang terbaru ke layar secara real-time.
+4) update_cart_display(self): Mengosongkan visual listbox keranjang lama dan membangun kembali urutan nomor barang baru beserta total akumulasi biaya yang harus dibayar pembeli.
+5) add_to_cart(self, item_name): Berfungsi memasukkan barang ke keranjang. Memvalidasi apakah nilai count stok masih $> 0$. Jika tersedia, stok dikurangi 1 dan teks nama barang di-append (dimasukkan) ke ujung belakang array self.cart.
+6) remove_selected_item(self): Mengatur pembatalan item terpilih dari antrean keranjang dan mengembalikan alokasi jumlah barang ke etalase utama.
+7) show_qr_payment(self): Menghitung total biaya dan memunculkan jendela baru (Toplevel window) yang menampilkan matriks karakter acak menyerupai kode QR palsu sebagai simulasi pembayaran modern.
+8) finish_payment(self, qr_window): Menutup jendela QR, menampilkan dialog sukses pembayaran, mengosongkan riwayat penampung lama, dan mengaktifkan rangkaian algoritma FIFO dispenser.
+9) animate_fifo_release(self): Algoritma inti rekursif berbasis waktu yang mengosongkan isi elemen self.cart dari indeks 0 demi memvisualisasikan jatuhnya produk ke tangan konsumen.
+
+4. KESIMPULAN
+Proyek Vending Machine ini berhasil mendemonstrasikan bahwa pemilihan struktur data yang tepat sangat berpengaruh terhadap performa komputasi. Manajemen database menggunakan keunggulan Key Lookup O(1) pada Hash Map menjamin kecepatan akses data barang. Di sisi lain, pembatasan alur pengeluaran barang terkontrol dengan sangat rapi berkat penerapan aturan kedisiplinan antrean Queue FIFO.
